@@ -307,8 +307,7 @@ class _EditBookPageState extends State<EditBookPage> {
     if (pickedFile != null) {
       _image = File(pickedFile.path);
       cropImage();
-    } else {
-    }
+    } else {}
   }
 
   Future<void> _selectFromCamera() async {
@@ -323,8 +322,7 @@ class _EditBookPageState extends State<EditBookPage> {
       _image = File(pickedFile.path);
 
       cropImage();
-    } else {
-    }
+    } else {}
   }
 
   Future<void> cropImage() async {

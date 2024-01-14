@@ -21,10 +21,18 @@ class OrderDetailsPage extends StatefulWidget {
 
 class _OrderDetailsPageState extends State<OrderDetailsPage> {
   List<OrderDetails> orderDetailsList = <OrderDetails>[];
+  String dropdownvalue = 'New';
+  var oderstatus = [
+    'New',
+    'Processing',
+    'Delivered',
+  ];
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    dropdownvalue = widget.order.orderStatus.toString();
     loadOrderDetails();
   }
 
@@ -39,8 +47,8 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
       appBar: AppBar(title: const Text("Order Details")),
       body: Column(
         children: [
-          Container(
-            height: screenHeight * 0.2,
+          SizedBox(
+            height: screenHeight * 0.15,
             width: screenWidth,
             child: Column(children: [
               const Text(
@@ -54,13 +62,40 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
             ]),
           ),
           Expanded(
-            child: Container(
-              color: Colors.amber,
-            ),
+            child: orderDetailsList.isEmpty
+                ? Center()
+                : ListView.builder(
+                    itemCount: orderDetailsList.length,
+                    itemBuilder: (context, index) {
+                      return ListTile(
+                          title: Text(
+                              orderDetailsList[index].bookTitle.toString()),
+                          onTap: () async {},
+                          subtitle:
+                              Text("RM ${orderDetailsList[index].bookPrice}"),
+                          leading: const Icon(Icons.sell),
+                          trailing: Text(
+                              "x ${orderDetailsList[index].cartQty} unit"));
+                    }),
           ),
           Container(
             height: screenHeight * 0.1,
-            color: Colors.red,
+            // color: Colors.red,
+            child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  Text(
+                    "Total RM ${widget.order.orderTotal}",
+                    style: const TextStyle(
+                        fontWeight: FontWeight.bold, fontSize: 18),
+                  ),
+                  Text("Status: ${widget.order.orderStatus.toString()}"),
+                  IconButton(
+                      onPressed: () {
+                        loadChangeDialogStatus();
+                      },
+                      icon: const Icon(Icons.edit))
+                ]),
           ),
         ],
       ),
@@ -90,6 +125,94 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
         }
       }
       setState(() {});
+    });
+  }
+
+  void loadChangeDialogStatus() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return StatefulBuilder(builder: (context, setState) {
+          return AlertDialog(
+            shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(10.0))),
+            title: const Text(
+              "Change Order Status",
+              style: TextStyle(),
+            ),
+            content: Column(mainAxisSize: MainAxisSize.min, children: [
+              DropdownButton(
+                value: dropdownvalue,
+                underline: const SizedBox(),
+                isExpanded: true,
+                icon: const Icon(Icons.keyboard_arrow_down),
+                items: oderstatus.map((String items) {
+                  return DropdownMenuItem(
+                    value: items,
+                    child: Text(items),
+                  );
+                }).toList(),
+                onChanged: (String? newValue) {
+                  dropdownvalue = newValue!;
+                  print(dropdownvalue);
+                  setState(() {});
+                },
+              )
+            ]),
+            actions: <Widget>[
+              TextButton(
+                child: const Text(
+                  "Yes",
+                  style: TextStyle(),
+                ),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  updateOrder();
+                },
+              ),
+              TextButton(
+                child: const Text(
+                  "No",
+                  style: TextStyle(),
+                ),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                    content: Text("Canceled"),
+                    backgroundColor: Colors.red,
+                  ));
+                },
+              ),
+            ],
+          );
+        });
+      },
+    );
+  }
+
+  void updateOrder() {
+    http.post(
+        Uri.parse("${MyServerConfig.server}/bookbytes/php/update_order.php"),
+        body: {
+          "orderid": widget.order.orderId,
+          "orderstatus": dropdownvalue,
+        }).then((response) {
+      //print(response.body);
+      if (response.statusCode == 200) {
+        var data = jsonDecode(response.body);
+        if (data['status'] == "success") {
+          Navigator.of(context).pop();
+          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+            content: Text("Update Success"),
+            backgroundColor: Colors.green,
+          ));
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+            content: Text("Update Failed"),
+            backgroundColor: Colors.red,
+          ));
+        }
+      }
     });
   }
 }

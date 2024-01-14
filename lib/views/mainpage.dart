@@ -48,7 +48,7 @@ class _MainPageState extends State<MainPage> {
     }
     return Scaffold(
       appBar: AppBar(
-          iconTheme: const IconThemeData(color: Colors.black),
+          iconTheme: const IconThemeData(color: Colors.white),
           title: const Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [

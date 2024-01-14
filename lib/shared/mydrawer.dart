@@ -1,3 +1,4 @@
+import 'package:bookbytes/views/cartpage.dart';
 import 'package:bookbytes/views/communitypage.dart';
 import 'package:flutter/material.dart';
 
@@ -10,7 +11,7 @@ import 'EnterExitRoute.dart';
 class MyDrawer extends StatefulWidget {
   final String page;
   final User userdata;
-  
+
   const MyDrawer({Key? key, required this.page, required this.userdata})
       : super(key: key);
 
@@ -27,9 +28,7 @@ class _MyDrawerState extends State<MyDrawer> {
         padding: EdgeInsets.zero,
         children: [
           UserAccountsDrawerHeader(
-            decoration: const BoxDecoration(
-              color: Colors.blue,
-            ),
+            decoration: const BoxDecoration(color: Colors.brown),
             currentAccountPicture: const CircleAvatar(
                 foregroundImage: AssetImage('assets/images/profile.png'),
                 backgroundColor: Colors.white),
@@ -40,7 +39,7 @@ class _MyDrawerState extends State<MyDrawer> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(widget.userdata.useremail.toString()),
-                    const Text("RM100")
+                    Text("RM100")
                   ]),
             ),
           ),
@@ -53,6 +52,7 @@ class _MyDrawerState extends State<MyDrawer> {
               //     context,
               //     MaterialPageRoute(
               //         builder: (content) => const MainPage()));
+              print(widget.page.toString());
               if (widget.page.toString() == "books") {
                 //  Navigator.pop(context);
                 return;
@@ -72,6 +72,7 @@ class _MyDrawerState extends State<MyDrawer> {
             title: const Text('Orders and Sales'),
             onTap: () {
               Navigator.pop(context);
+              print(widget.page.toString());
               if (widget.page.toString() == "seller") {
                 // Navigator.pop(context);
                 return;
@@ -95,6 +96,7 @@ class _MyDrawerState extends State<MyDrawer> {
             leading: const Icon(Icons.people),
             title: const Text('Community'),
             onTap: () {
+              print(widget.page.toString());
               Navigator.pop(context);
               if (widget.page.toString() == "community") {
                 //  Navigator.pop(context);
@@ -115,6 +117,7 @@ class _MyDrawerState extends State<MyDrawer> {
             leading: const Icon(Icons.verified_user),
             title: const Text('My Account'),
             onTap: () {
+              print(widget.page.toString());
               Navigator.pop(context);
               if (widget.page.toString() == "account") {
                 //  Navigator.pop(context);
@@ -129,6 +132,27 @@ class _MyDrawerState extends State<MyDrawer> {
                   EnterExitRoute(
                       exitPage: ProfilePage(userdata: widget.userdata),
                       enterPage: ProfilePage(userdata: widget.userdata)));
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.shopping_cart),
+            title: const Text('Your Cart'),
+            onTap: () {
+              print(widget.page.toString());
+              Navigator.pop(context);
+              if (widget.page.toString() == "cart") {
+                //  Navigator.pop(context);
+                return;
+              }
+              Navigator.pop(context);
+
+              // Navigator.push(context,
+              //     MaterialPageRoute(builder: (content) => const ProfilePage()));
+              Navigator.push(
+                  context,
+                  EnterExitRoute(
+                      exitPage: CartPage(userdata: widget.userdata),
+                      enterPage: CartPage(userdata: widget.userdata)));
             },
           ),
           const Divider(

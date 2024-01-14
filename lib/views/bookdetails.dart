@@ -1,7 +1,8 @@
 import 'dart:convert';
+//import 'dart:math';
 import 'package:bookbytes/models/user.dart';
 import 'package:bookbytes/shared/myserverconfig.dart';
-import 'package:bookbytes/views/editbookpage.dart';
+//import 'package:bookbytes/views/editbookpage.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
@@ -34,42 +35,6 @@ class _BookDetailsState extends State<BookDetails> {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.book.bookTitle.toString()),
-        actions: [
-          PopupMenuButton(itemBuilder: (context) {
-            return [
-              PopupMenuItem<int>(
-                value: 0,
-                enabled: bookowner,
-                child: const Text("Update"),
-              ),
-              PopupMenuItem<int>(
-                enabled: bookowner,
-                value: 1,
-                child: const Text("Delete"),
-              ),
-            ];
-          }, onSelected: (value) {
-            if (value == 0) {
-              if (widget.book.userId == widget.book.userId) {
-                updateDialog();
-              } else {
-                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                  content: Text("Not allowed!!!"),
-                  backgroundColor: Colors.red,
-                ));
-              }
-            } else if (value == 1) {
-              if (widget.book.userId == widget.book.userId) {
-                deleteDialog();
-              } else {
-                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                  content: Text("Not allowed!!!"),
-                  backgroundColor: Colors.red,
-                ));
-              }
-            } else if (value == 2) {}
-          }),
-        ],
       ),
       body: SingleChildScrollView(
         child: Column(children: [
@@ -116,6 +81,14 @@ class _BookDetailsState extends State<BookDetails> {
                     const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
               Text("Quantity Available ${widget.book.bookQty}"),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: ElevatedButton(
+                    onPressed: () {
+                      insertCartDialog();
+                    },
+                    child: Text("Add to Cart")),
+              )
             ]),
           ),
         ]),
@@ -123,15 +96,15 @@ class _BookDetailsState extends State<BookDetails> {
     );
   }
 
-  void updateDialog() {
+  void insertCartDialog() {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
           shape: const RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(10.0))),
+              borderRadius: BorderRadius.all(Radius.circular(20.0))),
           title: const Text(
-            "Update this book?",
+            "Insert to cart?",
             style: TextStyle(),
           ),
           content: const Text("Are you sure?", style: TextStyle()),
@@ -143,13 +116,7 @@ class _BookDetailsState extends State<BookDetails> {
               ),
               onPressed: () {
                 Navigator.of(context).pop();
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (content) => EditBookPage(
-                              user: widget.user,
-                              book: widget.book,
-                            )));
+                insertCart();
               },
             ),
             TextButton(
@@ -159,10 +126,6 @@ class _BookDetailsState extends State<BookDetails> {
               ),
               onPressed: () {
                 Navigator.of(context).pop();
-                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                  content: Text("Canceled"),
-                  backgroundColor: Colors.red,
-                ));
               },
             ),
           ],
@@ -171,68 +134,25 @@ class _BookDetailsState extends State<BookDetails> {
     );
   }
 
-  void deleteDialog() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          shape: const RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(10.0))),
-          title: const Text(
-            "Delete this book?",
-            style: TextStyle(),
-          ),
-          content: const Text("Are you sure?", style: TextStyle()),
-          actions: <Widget>[
-            TextButton(
-              child: const Text(
-                "Yes",
-                style: TextStyle(),
-              ),
-              onPressed: () {
-                Navigator.of(context).pop();
-                deleteBook();
-              },
-            ),
-            TextButton(
-              child: const Text(
-                "No",
-                style: TextStyle(),
-              ),
-              onPressed: () {
-                Navigator.of(context).pop();
-                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                  content: Text("Canceled"),
-                  backgroundColor: Colors.red,
-                ));
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  void deleteBook() {
+  void insertCart() {
     http.post(
-        Uri.parse("${MyServerConfig.server}/bookbytes/php/delete_book.php"),
+        Uri.parse("${MyServerConfig.server}/bookbytes/php/insert_cart.php"),
         body: {
-          "userid": widget.user.userid.toString(),
-          "bookid": widget.book.bookId.toString(),
+          "buyer_id": widget.user.userid.toString(),
+          "seller_id": widget.book.userId.toString(),
+          "book_id": widget.book.bookId.toString(),
         }).then((response) {
+      print(response.body);
       if (response.statusCode == 200) {
         var data = jsonDecode(response.body);
         if (data['status'] == "success") {
           ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-            content: Text("Delete Success"),
+            content: Text("Success"),
             backgroundColor: Colors.green,
           ));
-          Navigator.of(context).pop();
-          // Navigator.push(context,
-          //     MaterialPageRoute(builder: (content) => const LoginPage()));
         } else {
           ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-            content: Text("Delete Failed"),
+            content: Text("Failed"),
             backgroundColor: Colors.red,
           ));
         }
