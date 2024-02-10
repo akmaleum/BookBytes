@@ -108,7 +108,7 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
     http
         .get(
       Uri.parse(
-          "${MyServerConfig.server}/bookbytes/php/load_ordersDetails.php?orderid=$orderid"),
+          "${MyServerConfig.server}/bookbytes_db/php/load_ordersDetails.php?orderid=$orderid"),
     )
         .then((response) {
       // log(response.body);
@@ -192,7 +192,7 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
 
   void updateOrder() {
     http.post(
-        Uri.parse("${MyServerConfig.server}/bookbytes/php/update_order.php"),
+        Uri.parse("${MyServerConfig.server}/bookbytes_db/php/update_order.php"),
         body: {
           "orderid": widget.order.orderId,
           "orderstatus": dropdownvalue,

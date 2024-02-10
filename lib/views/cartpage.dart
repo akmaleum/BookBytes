@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:bookbytes/models/cart.dart';
 import 'package:bookbytes/models/user.dart';
 import 'package:bookbytes/shared/mydrawer.dart';
+import 'package:bookbytes/views/billpage.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import '../shared/myserverconfig.dart';
@@ -52,8 +53,8 @@ class _CartPageState extends State<CartPage> {
                         itemCount: cartList.length,
                         itemBuilder: (context, index) {
                           return Card(
-                            elevation: 7,
-                            margin: const EdgeInsets.all(10),
+                            elevation: 2,
+                            margin: const EdgeInsets.all(8),
                             child: ListTile(
                               title: Text(
                                 cartList[index].bookTitle.toString(),
@@ -61,22 +62,22 @@ class _CartPageState extends State<CartPage> {
                                     fontWeight: FontWeight.bold),
                               ),
                               subtitle: Text(
-                                "MYR ${cartList[index].bookPrice}",
+                                "RM ${cartList[index].bookPrice}",
                                 style: TextStyle(color: Colors.grey[600]),
                               ),
                               leading: const CircleAvatar(
-                                child: Icon(Icons.book, color: Colors.white),
-                                backgroundColor: Colors.blueGrey,
+                                child: Icon(Icons.sell, color: Colors.white),
+                                backgroundColor: Colors.blue,
                               ),
                               trailing: Row(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
                                   Text(
-                                    "x ${cartList[index].cartQty} item",
-                                    style: TextStyle(color: Colors.white),
+                                    "x ${cartList[index].cartQty} unit",
+                                    style: TextStyle(color: Colors.blue),
                                   ),
                                   IconButton(
-                                    icon: const Icon(Icons.delete_forever,
+                                    icon: const Icon(Icons.delete,
                                         color: Colors.red),
                                     onPressed: () async {
                                       bool confirmDelete =
@@ -90,7 +91,7 @@ class _CartPageState extends State<CartPage> {
                                 ],
                               ),
                               onTap: () async {},
-                              contentPadding: const EdgeInsets.all(20),
+                              contentPadding: const EdgeInsets.all(16),
                             ),
                           );
                         },
@@ -102,7 +103,7 @@ class _CartPageState extends State<CartPage> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
-                            "NET TOTAL",
+                            "TOTAL",
                             style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
@@ -110,7 +111,7 @@ class _CartPageState extends State<CartPage> {
                             ),
                           ),
                           Text(
-                            "MYR ${total.toStringAsFixed(2)}",
+                            "RM ${total.toStringAsFixed(2)}",
                             style: const TextStyle(
                               fontSize: 24,
                               fontWeight: FontWeight.bold,
@@ -119,13 +120,22 @@ class _CartPageState extends State<CartPage> {
                           ),
                           const SizedBox(height: 16),
                           ElevatedButton(
-                            onPressed: () {},
+                            onPressed: () async {
+                              await Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (content) => BillScreen(
+                                            user: widget.userdata,
+                                            totalprice: total,
+                                          )));
+                              loadUserCart();
+                            },
                             style: ElevatedButton.styleFrom(
-                              primary: Colors.blueGrey,
+                              primary: Colors.blue,
                               padding: const EdgeInsets.symmetric(
-                                  horizontal: 20, vertical: 12),
+                                  horizontal: 24, vertical: 12),
                             ),
-                            child: const Text("Proceed to Check Out"),
+                            child: const Text("Proceed to Payment"),
                           ),
                         ],
                       ),
@@ -167,7 +177,8 @@ class _CartPageState extends State<CartPage> {
     String cartId = cartList[index].cartId.toString();
 
     http.post(
-      Uri.parse("${MyServerConfig.server}/bookbytes/php/delete_cart_item.php"),
+      Uri.parse(
+          "${MyServerConfig.server}/bookbytes_db/php/delete_cart_item.php"),
       body: {'cart_id': cartId},
     ).then((response) {
       if (response.statusCode == 200) {
@@ -198,7 +209,7 @@ class _CartPageState extends State<CartPage> {
     http
         .get(
       Uri.parse(
-          "${MyServerConfig.server}/bookbytes/php/load_cart.php?userid=$userid"),
+          "${MyServerConfig.server}/bookbytes_db/php/load_cart.php?userid=$userid"),
     )
         .then((response) {
       if (response.statusCode == 200) {

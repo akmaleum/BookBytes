@@ -108,7 +108,7 @@ class _OrderPageState extends State<OrderPage> {
     http
         .get(
       Uri.parse(
-          "${MyServerConfig.server}/bookbytes/php/load_orders.php?sellerid=$userid"),
+          "${MyServerConfig.server}/bookbytes_db/php/load_orders.php?sellerid=$userid"),
     )
         .then((response) {
       // log(response.body);

@@ -1,8 +1,6 @@
 import 'dart:convert';
-//import 'dart:math';
 import 'package:bookbytes/models/user.dart';
 import 'package:bookbytes/shared/myserverconfig.dart';
-//import 'package:bookbytes/views/editbookpage.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
@@ -44,7 +42,7 @@ class _BookDetailsState extends State<BookDetails> {
             //  padding: const EdgeInsets.all(4.0),
             child: Image.network(
                 fit: BoxFit.fill,
-                "${MyServerConfig.server}/bookbytes/assets/books/${widget.book.bookId}.png"),
+                "${MyServerConfig.server}/bookbytes_db/assets/books/${widget.book.bookId}.png"),
           ),
           Container(
             padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
@@ -136,7 +134,7 @@ class _BookDetailsState extends State<BookDetails> {
 
   void insertCart() {
     http.post(
-        Uri.parse("${MyServerConfig.server}/bookbytes/php/insert_cart.php"),
+        Uri.parse("${MyServerConfig.server}/bookbytes_db/php/insert_cart.php"),
         body: {
           "buyer_id": widget.user.userid.toString(),
           "seller_id": widget.book.userId.toString(),

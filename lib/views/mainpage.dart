@@ -48,7 +48,7 @@ class _MainPageState extends State<MainPage> {
     }
     return Scaffold(
       appBar: AppBar(
-          iconTheme: const IconThemeData(color: Colors.white),
+          iconTheme: const IconThemeData(color: Colors.black),
           title: const Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -56,7 +56,7 @@ class _MainPageState extends State<MainPage> {
               Text(
                 "Book List",
                 style: TextStyle(
-                  color: Colors.white,
+                  color: Colors.black,
                 ),
               ),
               SizedBox(
@@ -118,7 +118,7 @@ class _MainPageState extends State<MainPage> {
                                   padding: const EdgeInsets.all(4.0),
                                   child: Image.network(
                                       fit: BoxFit.fill,
-                                      "${MyServerConfig.server}/bookbytes/assets/books/${bookList[index].bookId}.png"),
+                                      "${MyServerConfig.server}/bookbytes_db/assets/books/${bookList[index].bookId}.png"),
                                 ),
                               ),
                               Flexible(
@@ -211,7 +211,7 @@ class _MainPageState extends State<MainPage> {
     http
         .get(
       Uri.parse(
-          "${MyServerConfig.server}/bookbytes/php/load_books.php?title=$title&pageno=$curpage"),
+          "${MyServerConfig.server}/bookbytes_db/php/load_books.php?title=$title&pageno=$curpage"),
     )
         .then((response) {
       log(response.body);

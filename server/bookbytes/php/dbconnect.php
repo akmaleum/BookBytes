@@ -1,8 +1,8 @@
 <?php
-$servername = "localhost";
-$username   = "root";
-$password   = "";
-$dbname     = "bookbytes_db";
+$servername = "infnitvoid.com";
+$username   = "infnidrc_akmal";
+$password   = "h15yamDB_";
+$dbname     = "infnidrc_bookbytes_db";
 
 $conn = new mysqli($servername, $username, $password, $dbname);
 if ($conn->connect_error) {

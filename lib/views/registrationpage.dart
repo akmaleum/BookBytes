@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:bookbytes/shared/myserverconfig.dart';
 import 'package:bookbytes/views/loginpage.dart';
 import 'package:flutter/material.dart';
@@ -248,7 +247,8 @@ class _RegistrationPageState extends State<RegistrationPage> {
     String pass = _passEditingController.text;
 
     http.post(
-        Uri.parse("${MyServerConfig.server}/bookbytes/php/register_user.php"),
+        Uri.parse(
+            "${MyServerConfig.server}/bookbytes_db/php/register_user.php"),
         body: {
           "name": name,
           "email": email,

@@ -124,7 +124,7 @@ class _LoginPageState extends State<LoginPage> {
     String pass = _passEditingController.text;
 
     http.post(
-        Uri.parse("${MyServerConfig.server}/bookbytes/php/login_user.php"),
+        Uri.parse("${MyServerConfig.server}/bookbytes_db/php/login_user.php"),
         body: {"email": email, "password": pass}).then((response) {
       // print(response.statusCode);
       // print(response.body);
@@ -136,8 +136,10 @@ class _LoginPageState extends State<LoginPage> {
             content: Text("Login Success"),
             backgroundColor: Colors.green,
           ));
-          Navigator.push(context,
-              MaterialPageRoute(builder: (content) =>  MainPage(userdata:user)));
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (content) => MainPage(userdata: user)));
         } else {
           ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
             content: Text("Login Failed"),

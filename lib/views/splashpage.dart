@@ -43,11 +43,11 @@ class _SplashPageState extends State<SplashPage> {
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
           Text(
-            "BookBytes",
+            "BookBytes Final",
             style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
           ),
           CircularProgressIndicator(),
-          Text("Version 0.1")
+          Text("Version Final")
         ],
       )),
     );
@@ -60,7 +60,7 @@ class _SplashPageState extends State<SplashPage> {
     bool rem = (prefs.getBool('rem')) ?? false;
     if (rem) {
       http.post(
-          Uri.parse("${MyServerConfig.server}/bookbytes/php/login_user.php"),
+          Uri.parse("${MyServerConfig.server}/bookbytes_db/php/login_user.php"),
           body: {"email": email, "password": password}).then((response) {
         if (response.statusCode == 200) {
           var data = jsonDecode(response.body);

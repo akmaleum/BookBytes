@@ -2,7 +2,8 @@
 //error_reporting(0);
 include_once("dbconnect.php");
 $userid = $_GET['userid'];
-$sqllodcart = "SELECT * FROM `tbl_carts` INNER JOIN tbl_books ON tbl_carts.book_id = tbl_books.book_id WHERE tbl_carts.buyer_id = '$userid' AND tbl_carts.cart_status = 'New'";
+$sqllodcart = "SELECT * FROM `tbl_carts` INNER JOIN tbl_books ON tbl_carts.book_id = tbl_books.book_id WHERE 
+tbl_carts.buyer_id = '$userid' AND tbl_carts.cart_status = 'New'";
 $result = $conn->query($sqllodcart);
 
 if ($result->num_rows > 0) {

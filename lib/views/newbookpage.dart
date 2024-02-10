@@ -292,8 +292,7 @@ class _NewBookPageState extends State<NewBookPage> {
     if (pickedFile != null) {
       _image = File(pickedFile.path);
       cropImage();
-    } else {
-    }
+    } else {}
   }
 
   Future<void> _selectFromCamera() async {
@@ -308,8 +307,7 @@ class _NewBookPageState extends State<NewBookPage> {
       _image = File(pickedFile.path);
 
       cropImage();
-    } else {
-    }
+    } else {}
   }
 
   Future<void> cropImage() async {
@@ -407,7 +405,7 @@ class _NewBookPageState extends State<NewBookPage> {
     String imagestr = base64Encode(_image!.readAsBytesSync());
 
     http.post(
-        Uri.parse("${MyServerConfig.server}/bookbytes/php/insert_book.php"),
+        Uri.parse("${MyServerConfig.server}/bookbytes_db/php/insert_book.php"),
         body: {
           "userid": widget.userdata.userid.toString(),
           "isbn": isbn,
